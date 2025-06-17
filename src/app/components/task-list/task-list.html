@@ -1,0 +1,84 @@
+<div class="task-container">
+  <div class="task-grid">
+    <div class="task-header">
+      <div class="header-item">Durum</div>
+      <div class="header-item">Görev Bilgileri</div>
+      <div class="header-item">Kategori</div>
+      <div class="header-item">Öncelik</div>
+      <div class="header-item">Bitiş Tarihi</div>
+      <div class="header-item">İşlemler</div>
+    </div>
+
+    <div class="task-row" *ngFor="let task of tasks" [class.completed]="task.isCompleted">
+      <!-- Durum - Checkbox -->
+      <div class="task-cell status-cell" data-label="Durum: ">
+        <label class="checkbox-container">
+          <input
+            type="checkbox"
+            [checked]="task.isCompleted"
+            (change)="onToggleComplete(task.id!)"
+          />
+          <span class="checkmark"></span>
+        </label>
+      </div>
+
+      <!-- Görev Bilgileri -->
+      <div class="task-cell task-info" data-label="Görev: ">
+        <div class="task-title" [class.completed-text]="task.isCompleted">
+          {{ task.title }}
+        </div>
+        <div class="task-description" *ngIf="task.description" [class.completed-text]="task.isCompleted">
+          {{ getTruncatedDescription(task.description) }}
+        </div>
+      </div>
+
+      <!-- Kategori -->
+      <div class="task-cell category-cell" data-label="Kategori: ">
+        <span class="category-badge" [ngClass]="'category-' + task.category.toLowerCase()">
+          {{ task.category }}
+        </span>
+      </div>
+
+      <!-- Öncelik -->
+      <div class="task-cell priority-cell" data-label="Öncelik: ">
+        <button class="priority-btn" [class]="'priority-' + task.priority.toLowerCase()" disabled>
+          {{ task.priority }}
+        </button>
+      </div>
+
+      <!-- Bitiş Tarihi -->
+      <div class="task-cell date-cell" data-label="Bitiş Tarihi: " [class.completed-text]="task.isCompleted">
+        {{ task.dueDate | date:'dd/MM/yyyy' }}
+      </div>
+
+      <!-- İşlemler -->
+      <div class="task-cell actions-cell" data-label="İşlemler: ">
+        <button class="action-btn edit-btn" [routerLink]="['/tasks/edit', task.id]" title="Düzenle">
+          <span>✏️</span>
+        </button>
+        <button class="action-btn delete-btn" (click)="onDelete(task.id!, task.title)" title="Sil">
+          <span>🗑️</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Silme Onay Modal'ı -->
+  <div class="modal-overlay" *ngIf="showDeleteModal" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-title">Görevi Sil</div>
+      <div class="modal-message">
+        <strong>"{{ taskToDelete?.title }}"</strong> görevini gerçekten silmek istiyor musunuz?<br>
+        Bu işlem geri alınamaz.
+      </div>
+      <div class="modal-buttons">
+        <button class="modal-btn modal-btn-cancel" (click)="closeModal()">
+          İptal
+        </button>
+        <button class="modal-btn modal-btn-confirm" (click)="confirmDelete()">
+          Eminim, Sil
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

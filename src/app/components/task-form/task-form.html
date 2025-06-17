@@ -1,0 +1,96 @@
+<div class="form-container">
+  <div class="form-card">
+    <button type="button" (click)="goToHome()" class="back-btn">← Ana Sayfaya Dön</button>
+    
+    <h2 class="form-title">{{ isEditMode ? 'Görevi Düzenle' : 'Yeni Görev Ekle' }}</h2>
+    
+    <form (ngSubmit)="saveTask()">
+      <div class="form-group">
+        <label for="title">Başlık (maksimum 50 karakter):</label>
+        <input 
+          type="text" 
+          id="title" 
+          name="title" 
+          [(ngModel)]="task.title" 
+          maxlength="50" 
+          required 
+          #title="ngModel" 
+        />
+        <div class="char-count">{{ task.title.length }}/50</div>
+      </div>
+
+      <div class="form-group">
+        <label for="category">Kategori:</label>
+        <select id="category" name="category" [(ngModel)]="task.category" required>
+          <option *ngFor="let c of categories" [value]="c">{{ c }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Öncelik:</label>
+        <div class="priority-group">
+          <button 
+            type="button"
+            class="priority-option"
+            [class.selected]="task.priority === 'Yüksek'"
+            [class.yuksek]="task.priority === 'Yüksek'"
+            (click)="setPriority('Yüksek')"
+          >
+            Yüksek
+          </button>
+          <button 
+            type="button"
+            class="priority-option"
+            [class.selected]="task.priority === 'Orta'"
+            [class.orta]="task.priority === 'Orta'"
+            (click)="setPriority('Orta')"
+          >
+            Orta
+          </button>
+          <button 
+            type="button"
+            class="priority-option"
+            [class.selected]="task.priority === 'Düşük'"
+            [class.dusuk]="task.priority === 'Düşük'"
+            (click)="setPriority('Düşük')"
+          >
+            Düşük
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="dueDate">Bitiş Tarihi:</label>
+        <input type="date" id="dueDate" name="dueDate" [(ngModel)]="task.dueDate" />
+      </div>
+
+      <div class="form-group">
+        <label for="description">Açıklama (maksimum 500 karakter):</label>
+        <textarea 
+          id="description" 
+          name="description" 
+          [(ngModel)]="task.description" 
+          maxlength="500"
+        ></textarea>
+        <div class="char-count">{{ task.description.length }}/500</div>
+      </div>
+
+      <button type="submit" class="submit-btn">
+        {{ isEditMode ? 'Görevi Güncelle' : 'Görevi Ekle' }}
+      </button>
+    </form>
+  </div>
+
+  <!-- Hata Modal'ı -->
+  <div class="modal-overlay" *ngIf="showErrorModal" (click)="closeErrorModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-title">{{ errorTitle }}</div>
+      <div class="modal-message">{{ errorMessage }}</div>
+      <div class="modal-buttons">
+        <button class="modal-btn modal-btn-ok" (click)="closeErrorModal()">
+          Tamam
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

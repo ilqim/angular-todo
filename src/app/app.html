@@ -1,0 +1,48 @@
+<div class="app-container">
+  <div class="app-header">
+    <h1>{{ title }}</h1>
+    <a routerLink="/tasks/add" class="add-task-btn">+ Yeni Görev Ekle</a>
+  </div>
+
+  <!-- Filtreleri sadece ana sayfada göster -->
+  <div class="filter-container" *ngIf="showFilters">
+    <label>
+      Kategori:
+      <select [(ngModel)]="selectedCategory">
+        <option value="">Tümü</option>
+        <option value="İş">İş</option>
+        <option value="Okul">Okul</option>
+        <option value="Kişisel">Kişisel</option>
+      </select>
+    </label>
+
+    <label>
+      Tamamlanma:
+      <select [(ngModel)]="selectedCompletion">
+        <option value="">Tümü</option>
+        <option value="true">Tamamlananlar</option>
+        <option value="false">Tamamlanmayanlar</option>
+      </select>
+    </label>
+
+    <label>
+      Tarih Sıralama:
+      <select [(ngModel)]="selectedSort">
+        <option value="">Sıralama Yok</option>
+        <option value="asc">Tarihe Göre Artan</option>
+        <option value="desc">Tarihe Göre Azalan</option>
+      </select>
+    </label>
+  </div>
+
+  <!-- Ana sayfa için task list göster, diğer sayfalar için router-outlet -->
+  <router-outlet></router-outlet>
+  
+  <!-- Sadece ana sayfadayken görev listesini göster -->
+  <app-task-list
+    *ngIf="showTaskList"
+    [tasks]="filteredTasks"
+    (deleteTask)="handleDeleteTask($event)"
+    (toggleComplete)="handleToggleComplete($event)">
+  </app-task-list>
+</div>
